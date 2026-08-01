@@ -570,7 +570,17 @@
         background: rgba(255, 255, 255, 0.08);
       }
     }
-
+    /* Imagen del artista en celulares verticales */
+@media (max-width: 600px) and (orientation: portrait) {
+  .artist-image {
+    width: 180px;
+    height: 180px;
+    max-width: none;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+}
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after {
