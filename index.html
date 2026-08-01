@@ -15,6 +15,11 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/cover.png">
 
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
+
   <style>
     :root {
       --red: #e10600;
@@ -68,7 +73,43 @@
       background-size: 36px 36px;
       mask-image: linear-gradient(to bottom, black, transparent 75%);
     }
+    .social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
 
+.social-links a {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.social-links i {
+  font-size: 24px;
+}
     img,
     iframe,
     video {
@@ -707,60 +748,45 @@
       </div>
     </section>
 
-    <section id="redes">
-      <div class="page">
-        <div class="section-heading reveal">
-          <p class="section-kicker">Mantente conectado</p>
-          <h2>Sigue a AKHAI</h2>
-        </div>
+    <div class="social-links">
 
-        <div class="social-grid reveal">
-          <a class="social-link"
-             href="https://www.instagram.com/akhai.wav/"
-             target="_blank"
-             rel="noopener noreferrer">
-            <span class="social-icon">◎</span>
-            <span>
-              <span class="social-name">Instagram</span>
-              <span class="social-user">@akhai.wav</span>
-            </span>
-          </a>
+  <a
+    href="https://open.spotify.com/artist/73E11Q7APeqy524Ij2Y0MG"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Spotify de Akhai"
+  >
+    <i class="fa-brands fa-spotify"></i>
+  </a>
 
-          <a class="social-link"
-             href="https://www.tiktok.com/@akhai.wav"
-             target="_blank"
-             rel="noopener noreferrer">
-            <span class="social-icon">♪</span>
-            <span>
-              <span class="social-name">TikTok</span>
-              <span class="social-user">@akhai.wav</span>
-            </span>
-          </a>
+  <a
+    href="https://www.youtube.com/@akhai01"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="YouTube de Akhai"
+  >
+    <i class="fa-brands fa-youtube"></i>
+  </a>
 
-          <a class="social-link"
-             href="https://www.youtube.com/@akhai01"
-             target="_blank"
-             rel="noopener noreferrer">
-            <span class="social-icon">▶</span>
-            <span>
-              <span class="social-name">YouTube</span>
-              <span class="social-user">@akhai01</span>
-            </span>
-          </a>
+  <a
+    href="https://www.instagram.com/akhai.wav/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram de Akhai"
+  >
+    <i class="fa-brands fa-instagram"></i>
+  </a>
 
-          <a class="social-link"
-             href="https://open.spotify.com/intl-es/artist/73E11Q7APeqy524Ij2Y0MG?si=7_29XKWlRAGmv9XVSmFOlg"
-             target="_blank"
-             rel="noopener noreferrer">
-            <span class="social-icon">●</span>
-            <span>
-              <span class="social-name">Spotify</span>
-              <span class="social-user">Perfil oficial</span>
-            </span>
-          </a>
-        </div>
-      </div>
-    </section>
+  <a
+    href="https://www.tiktok.com/@akhai.wav"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="TikTok de Akhai"
+  >
+    <i class="fa-brands fa-tiktok"></i>
+  </a>
+
+</div>
 
     <section>
       <div class="page">
