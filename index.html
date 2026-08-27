@@ -513,7 +513,29 @@
       transform: none;
     }
 
+    .cover-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
 
+.scan-title {
+  font-size: clamp(1.25rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .cover-column {
+    order: 2;
+  }
+
+  .cover-wrap {
+    order: initial;
+  }
+}
     @media (max-width: 719px) {
       .hero {
         min-height: auto;
@@ -665,15 +687,21 @@
           </div>
         </div>
 
-        <div class="cover-wrap reveal">
-          <div class="cover-glow" aria-hidden="true"></div>
-          <img
-            class="cover"
-            src="assets/cover.png"
-            alt="Portada del álbum 2001 de AKHAI"
-            width="1200"
-            height="1200">
-        </div>
+        <div class="cover-column reveal">
+  <p class="scan-title">Gracias por escanear!</p>
+
+  <div class="cover-wrap">
+    <div class="cover-glow" aria-hidden="true"></div>
+
+    <img
+      class="cover"
+      src="assets/cover.png"
+      alt="Portada del álbum 2001 de AKHAI"
+      width="1200"
+      height="1200">
+  </div>
+</div>
+        
       </div>
     </section>
 
