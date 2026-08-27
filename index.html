@@ -276,6 +276,18 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      font-family: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+    .button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+    
+    .button.is-playing {
+      background: #1db954;
+      border-color: #1db954;
     }
 
     .button:active {
@@ -292,7 +304,22 @@
       background: rgba(255, 255, 255, 0.045);
       backdrop-filter: blur(12px);
     }
+    .cover-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
 
+.scan-title {
+  font-size: clamp(1.35rem, 4vw, 2rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: var(--white);
+}
     .cover-wrap {
       width: min(88vw, 520px);
       max-width: 100%;
@@ -664,19 +691,27 @@
     <section class="hero" id="inicio">
       <div class="page hero-grid">
         <div class="hero-copy reveal">
-          <p class="eyebrow">Álbum disponible</p>
-          <h1>2001</h1>
-          <p class="artist-name">AKHAI</p>
-          <p class="hero-text">
-            Bienvenido al universo de <strong>2001</strong>. Gracias por apoyar la música
-            independiente y formar parte de este lanzamiento.
-          </p>
+          <p class="eyebrow">Bienvenido a 2001</p>
+
+            <h1>2001</h1>
+            
+            <p class="artist-name">AKHAI</p>
+            
+            <p class="hero-text">
+              Si llegaste hasta acá, el QR hizo su pega.
+              <strong>2001</strong> son ocho canciones, una etapa y un pedazo de mi historia.
+              Dale play y quédate con la que más te pegue.
+            </p>
+
 
           <div class="actions">
-            <a class="button button-primary"
-               href="#escuchar">
-              ▶ Escuchar ahora
-            </a>
+            <button
+              class="button button-primary"
+              id="enter2001"
+              type="button"
+              disabled>
+              Cargando 2001...
+            </button>
 
             <a class="button button-secondary"
                href="https://youtube.com/playlist?list=PLSWi-f2Soheg&si=Qc8svDxLbqc8wEDt"
@@ -708,40 +743,44 @@
     <section id="escuchar">
       <div class="page">
         <div class="section-heading reveal">
-          <p class="section-kicker">Nuevo lanzamiento</p>
+          <p class="section-kicker">8 canciones · 1 proyecto</p>
+
           <h2>Escucha 2001</h2>
+          
           <p class="lead">
-            Reproduce el álbum directamente desde aquí o ábrelo en Spotify para guardarlo
-            en tu biblioteca.
+            Escúchalo de principio a fin o parte por la que te llame la atención.
+            Si alguna te pega, guárdala.
           </p>
         </div>
 
         <div class="card spotify-card reveal">
-          <iframe
-            class="spotify-frame"
-            src="https://open.spotify.com/embed/album/1qfuklz4UTDuLXZixpYFNV?utm_source=generator&theme=0"
-            title="2001 de AKHAI en Spotify"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy">
-          </iframe>
-        </div>
 
-        <div class="card album-note reveal">
-          <strong>Un espacio que seguirá creciendo.</strong>
-          <p>
-            Este sitio acompañará la edición física de 2001. Más adelante podrás encontrar
-            aquí nuevos videos, letras, imágenes y contenido relacionado con AKHAI sin que
-            cambie el código QR del disco.
-          </p>
+          <div
+            id="embed-iframe"
+            aria-label="2001 de AKHAI en Spotify">
+          </div>
+        
         </div>
+        <div class="card album-note reveal">
+
+          <strong>Este QR no termina acá.</strong>
+        
+          <p>
+            Voy a ir dejando por aquí videos, letras, imágenes y cosas que no siempre
+            subo a redes. Si tienes el CD o encontraste el sticker, vuelve de vez en cuando.
+          </p>
+        
+        </div>
+        
       </div>
     </section>
 
     <section id="artista">
       <div class="page">
         <div class="section-heading reveal">
-          <p class="section-kicker">El artista</p>
+          <p class="section-kicker">Detrás de 2001</p>
           <h2>AKHAI</h2>
+
         </div>
 
         <article class="card artist-card reveal">
@@ -754,11 +793,12 @@
           </div>
 
           <div class="artist-copy">
-            <h2>Una identidad propia.</h2>
+            <h2>Soy AKHAI.</h2>
+
             <p style="margin-top:16px;">
-              AKHAI es un artista chileno que construye su propuesta desde la música urbana,
-              mezclando reggaetón, trap y una estética visual intensa. Con 2001 presenta un
-              proyecto personal, directo y pensado para conectar sonido, imagen y experiencia.
+              Soy un artista chileno y me muevo entre el reggaetón, el trap y todo lo que
+              me sirva para convertir una canción en algo más que sonido.
+              <strong>2001</strong> es una parte de ese mundo.
             </p>
 
             <a class="button button-secondary"
@@ -766,7 +806,7 @@
                href="https://open.spotify.com/intl-es/artist/73E11Q7APeqy524Ij2Y0MG?si=7_29XKWlRAGmv9XVSmFOlg"
                target="_blank"
                rel="noopener noreferrer">
-              Ver perfil en Spotify
+              Seguir a AKHAI en Spotify
             </a>
           </div>
         </article>
@@ -816,11 +856,16 @@
     <section>
       <div class="page">
         <div class="card thanks reveal">
-          <p class="section-kicker">Edición física</p>
-          <h2 style="margin-top:12px;">Gracias por ser parte.</h2>
+          <p class="section-kicker">2001</p>
+
+          <h2 style="margin-top:12px;">
+            Si llegaste hasta acá, gracias.
+          </h2>
+          
           <p>
-            Cada reproducción, cada visita y cada copia física ayuda a que este proyecto
-            continúe creciendo. Nos vemos en el próximo capítulo.
+            Escuchar ya significa mucho. Si una canción te gustó, guárdala,
+            compártela o vuelve cuando quieras.
+            2001 sigue creciendo con cada persona que entra.
           </p>
         </div>
       </div>
@@ -830,26 +875,206 @@
   <footer>
     © <span id="year"></span> AKHAI · VERSATIL STUDIOS
   </footer>
+  <script
+    src="https://open.spotify.com/embed/iframe-api/v1"
+    async>
+  </script>
 
   <script>
+  
+    /* =============================
+       NAVEGACIÓN
+    ============================== */
+  
     const nav = document.getElementById("nav");
     const reveals = document.querySelectorAll(".reveal");
-
-    window.addEventListener("scroll", () => {
-      nav.classList.toggle("scrolled", window.scrollY > 20);
-    }, { passive: true });
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
+  
+    window.addEventListener(
+      "scroll",
+      () => {
+        nav.classList.toggle("scrolled", window.scrollY > 20);
+      },
+      { passive: true }
+    );
+  
+  
+    /* =============================
+       ANIMACIONES
+    ============================== */
+  
+    const observer = new IntersectionObserver(
+      (entries) => {
+  
+        entries.forEach((entry) => {
+  
+          if (entry.isIntersecting) {
+  
+            entry.target.classList.add("visible");
+  
+            observer.unobserve(entry.target);
+  
+          }
+  
+        });
+  
+      },
+      {
+        threshold: 0.12
+      }
+    );
+  
+    reveals.forEach((element) => {
+      observer.observe(element);
+    });
+  
+  
+    /* =============================
+       AÑO
+    ============================== */
+  
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  
+  
+    /* =============================
+       SPOTIFY
+    ============================== */
+  
+    let spotifyController = null;
+  
+    const enterButton =
+      document.getElementById("enter2001");
+  
+    const spotifySection =
+      document.getElementById("escuchar");
+  
+  
+    window.onSpotifyIframeApiReady = (IFrameAPI) => {
+  
+      const element =
+        document.getElementById("embed-iframe");
+  
+  
+      const options = {
+  
+        width: "100%",
+  
+        height: "352",
+  
+        uri: "spotify:album:1qfuklz4UTDuLXZixpYFNV"
+  
+      };
+  
+  
+      const callback = (EmbedController) => {
+  
+        spotifyController = EmbedController;
+  
+  
+        /* Spotify ya está preparado */
+  
+        enterButton.disabled = false;
+  
+        enterButton.innerHTML =
+          "▶ ENTRAR A 2001";
+  
+  
+        /* Intento de autoplay.
+           Puede funcionar en algunos navegadores,
+           pero Safari y otros pueden bloquearlo. */
+  
+        try {
+  
+          spotifyController.play();
+  
+        } catch (error) {
+  
+          console.log(
+            "Autoplay bloqueado por el navegador"
+          );
+  
         }
-      });
-    }, { threshold: 0.12 });
-
-    reveals.forEach((element) => observer.observe(element));
-    document.getElementById("year").textContent = new Date().getFullYear();
+  
+  
+        /* Cuando realmente empieza a reproducir */
+  
+        spotifyController.addListener(
+          "playback_started",
+          () => {
+  
+            enterButton.innerHTML =
+              "♫ SONANDO 2001";
+  
+            enterButton.classList.add(
+              "is-playing"
+            );
+  
+          }
+        );
+  
+      };
+  
+  
+      IFrameAPI.createController(
+        element,
+        options,
+        callback
+      );
+  
+    };
+  
+  
+    /* =============================
+       BOTÓN ENTRAR A 2001
+    ============================== */
+  
+    enterButton.addEventListener(
+      "click",
+      () => {
+  
+        if (!spotifyController) {
+          return;
+        }
+  
+  
+        /*
+         * Esta interacción del usuario
+         * permite iniciar sonido incluso
+         * cuando el autoplay fue bloqueado.
+         */
+  
+        spotifyController.play();
+  
+  
+        /*
+         * Bajamos automáticamente
+         * hasta el reproductor.
+         */
+  
+        spotifySection.scrollIntoView({
+  
+          behavior:
+            window.matchMedia(
+              "(prefers-reduced-motion: reduce)"
+            ).matches
+              ? "auto"
+              : "smooth",
+  
+          block: "start"
+  
+        });
+  
+  
+        enterButton.innerHTML =
+          "♫ SONANDO 2001";
+  
+        enterButton.classList.add(
+          "is-playing"
+        );
+  
+      }
+    );
+  
   </script>
 </body>
 </html>
