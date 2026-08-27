@@ -1226,14 +1226,7 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
        REALMENTE COMENZÓ
     ============================== */
 
-    spotifyController.addListener(
-      "playback_started",
-      () => {
 
-        showPlaying();
-
-      }
-    );
 
 
     /* =============================
@@ -1241,45 +1234,42 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
     ============================== */
 
     spotifyController.addListener(
-      "playback_update",
-      (event) => {
+  "playback_update",
+  (event) => {
 
-        const data = event.data;
+    const data = event.data;
 
-        if (!data) {
-          return;
-        }
+    if (!data) {
+      return;
+    }
 
+    /*
+     * Solo consideramos que REALMENTE
+     * está sonando si Spotify dice
+     * explícitamente que NO está pausado.
+     */
+    if (data.isPaused === false) {
 
-        /*
-         * Está reproduciendo realmente.
-         */
-        if (data.isPaused === false) {
+      showPlaying();
 
-          showPlaying();
+      return;
+    }
 
-          return;
+    /*
+     * Solo mostramos pausa si antes
+     * realmente había estado reproduciendo.
+     */
+    if (
+      spotifyPlaying === true &&
+      data.isPaused === true
+    ) {
 
-        }
+      showPaused();
 
+    }
 
-        /*
-         * Solamente mostramos PAUSADO
-         * si antes efectivamente estaba sonando.
-         */
-        if (
-          spotifyPlaying &&
-          data.isPaused === true
-        ) {
-
-          showPaused();
-
-        }
-
-      }
-    );
-
-  };
+  }
+);
 
 
   IFrameAPI.createController(
@@ -1314,26 +1304,20 @@ enterButton.addEventListener(
 
     if (spotifyPlaying) {
 
-      spotifyController.pause();
+  spotifyController.pause();
 
-    } else {
+} else {
 
-      try {
+  /*
+   * Usamos play directamente.
+   *
+   * Esta fue justamente la llamada
+   * que ya comprobamos que funciona
+   * cuando hay interacción real.
+   */
+  spotifyController.play();
 
-        /*
-         * resume() también inicia si todavía
-         * no había comenzado.
-         */
-        spotifyController.resume();
-
-      } catch (error) {
-
-        spotifyController.play();
-
-      }
-
-    }
-
+}
 
     spotifySection.scrollIntoView({
 
