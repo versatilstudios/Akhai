@@ -533,8 +533,14 @@
       }
 
       .artist-image {
-        width: 150%;
-        transform: translateY(38px) scale(1.08);
+          width: clamp(700px, 220vw, 980px);
+          max-width: none;
+          height: auto;
+
+          transform: translateY(45px);
+          transform-origin: center bottom;
+        
+          flex: 0 0 auto;
       }
     }
 
