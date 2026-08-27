@@ -946,7 +946,7 @@
     document.getElementById("year").textContent =
       new Date().getFullYear();
   
-  /* =============================
+/* =============================
    SPOTIFY
 ============================== */
 
@@ -955,15 +955,14 @@ let spotifyReady = false;
 let spotifyPlaying = false;
 
 /*
- * ¿La persona ya interactuó con la página?
+ * Si la persona ya interactuó antes
+ * de que Spotify terminara de cargar.
  */
-let userHasInteracted = false;
+let interactionPending = false;
 
 /*
- * Mientras sea true, cualquier interacción
- * puede servir para intentar arrancar 2001.
- *
- * En cuanto realmente empiece, pasa a false.
+ * Solo intentaremos iniciar automáticamente
+ * hasta que realmente empiece a sonar.
  */
 let autoStartPending = true;
 
@@ -976,7 +975,7 @@ const spotifySection =
 
 
 /* =============================
-   ESTADOS DEL BOTÓN
+   ESTADO DEL BOTÓN
 ============================== */
 
 function showLoading() {
@@ -985,6 +984,7 @@ function showLoading() {
   enterButton.innerHTML = "Cargando 2001...";
 
   enterButton.classList.remove("is-playing");
+
 }
 
 
@@ -994,6 +994,7 @@ function showReady() {
   enterButton.innerHTML = "▶ ENTRAR A 2001";
 
   enterButton.classList.remove("is-playing");
+
 }
 
 
@@ -1002,8 +1003,8 @@ function showPlaying() {
   spotifyPlaying = true;
 
   /*
-   * MUY IMPORTANTE:
-   * Spotify realmente confirmó playback.
+   * Ya conseguimos nuestro objetivo.
+   * No volveremos a arrancarlo por scroll/touch.
    */
   autoStartPending = false;
 
@@ -1011,6 +1012,7 @@ function showPlaying() {
   enterButton.innerHTML = "⏸ PAUSAR 2001";
 
   enterButton.classList.add("is-playing");
+
 }
 
 
@@ -1022,6 +1024,7 @@ function showPaused() {
   enterButton.innerHTML = "▶ REANUDAR 2001";
 
   enterButton.classList.remove("is-playing");
+
 }
 
 
@@ -1029,27 +1032,22 @@ showLoading();
 
 
 /* =============================
-   INTENTAR REPRODUCIR
+   REPRODUCIR
 ============================== */
 
-function tryToPlay() {
+function tryAutoPlay() {
 
-  /*
-   * Ya empezó anteriormente y el usuario
-   * posteriormente decidió pausarlo.
-   * No vamos a molestarlo reiniciándolo.
-   */
   if (!autoStartPending) {
     return;
   }
 
-
-  /*
-   * Spotify todavía no está preparado.
-   * La intención queda guardada y se
-   * intentará otra vez cuando llegue ready.
-   */
   if (!spotifyController || !spotifyReady) {
+
+    /*
+     * Guardamos que el usuario ya hizo algo.
+     */
+    interactionPending = true;
+
     return;
   }
 
@@ -1061,16 +1059,13 @@ function tryToPlay() {
   } catch (error) {
 
     /*
-     * Algunos navegadores bloquean play()
-     * fuera de una activación válida.
-     *
-     * No hacemos nada:
-     * la próxima interacción vuelve
-     * a intentarlo.
+     * Si Safari/otro navegador lo bloquea,
+     * simplemente lo intentamos en la
+     * próxima interacción.
      */
 
     console.log(
-      "Esperando una interacción válida para Spotify."
+      "Spotify espera otra interacción."
     );
 
   }
@@ -1079,36 +1074,26 @@ function tryToPlay() {
 
 
 /* =============================
-   REGISTRAR INTERACCIÓN
+   INTERACCIONES
 ============================== */
 
-function registerInteraction() {
-
-  userHasInteracted = true;
-
-  /*
-   * Si Spotify ya está preparado,
-   * aprovechamos este mismo gesto.
-   */
-  tryToPlay();
-
-}
-
-
 /*
- * POINTERDOWN:
+ * En móvil se dispara al apoyar el dedo.
  *
- * Se ejecuta inmediatamente al tocar.
- * Si Spotify YA está listo, intentamos
- * play dentro del propio gesto.
+ * Da lo mismo si después fue:
+ * - tap
+ * - swipe
+ * - scroll
  *
- * Esto ayuda especialmente en Safari.
+ * Si Spotify está listo intentamos play.
  */
 document.addEventListener(
   "pointerdown",
   () => {
 
-    registerInteraction();
+    interactionPending = true;
+
+    tryAutoPlay();
 
   },
   {
@@ -1119,19 +1104,20 @@ document.addEventListener(
 
 
 /*
- * Wheel para PC / trackpads.
+ * Scroll con rueda / trackpad.
  */
 document.addEventListener(
   "wheel",
   () => {
 
-    registerInteraction();
+    interactionPending = true;
+
+    tryAutoPlay();
 
   },
   {
     capture: true,
-    passive: true,
-    once: false
+    passive: true
   }
 );
 
@@ -1141,18 +1127,11 @@ document.addEventListener(
  */
 document.addEventListener(
   "keydown",
-  (event) => {
+  () => {
 
-    if (
-      event.key === "Enter" ||
-      event.key === " " ||
-      event.key === "ArrowDown" ||
-      event.key === "PageDown"
-    ) {
+    interactionPending = true;
 
-      registerInteraction();
-
-    }
+    tryAutoPlay();
 
   },
   {
@@ -1162,7 +1141,7 @@ document.addEventListener(
 
 
 /* =============================
-   API SPOTIFY
+   API DE SPOTIFY
 ============================== */
 
 window.onSpotifyIframeApiReady = (IFrameAPI) => {
@@ -1188,43 +1167,54 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
     spotifyController = EmbedController;
 
 
-    /* =============================
-       SPOTIFY REALMENTE LISTO
-    ============================== */
+    /*
+     * IMPORTANTE:
+     *
+     * Volvemos al comportamiento que
+     * sí te estaba funcionando.
+     *
+     * Si Spotify ya nos entregó el controller,
+     * permitimos intentar play.
+     */
+    spotifyReady = true;
 
+    showReady();
+
+
+    /*
+     * Intento de autoplay normal.
+     *
+     * Chrome puede permitirlo.
+     * Safari normalmente no.
+     */
+    tryAutoPlay();
+
+
+    /*
+     * Si la persona ya había tocado o
+     * deslizado mientras Spotify cargaba,
+     * intentamos inmediatamente ahora.
+     */
+    if (interactionPending) {
+
+      tryAutoPlay();
+
+    }
+
+
+    /*
+     * El evento ready sigue siendo útil,
+     * pero YA NO bloquea todo el sistema.
+     */
     spotifyController.addListener(
       "ready",
       () => {
 
         spotifyReady = true;
 
-        showReady();
+        if (interactionPending) {
 
-
-        /*
-         * Intento número 1:
-         *
-         * Probamos siempre.
-         *
-         * Si el navegador permite autoplay,
-         * empieza inmediatamente.
-         */
-
-        tryToPlay();
-
-
-        /*
-         * Si el usuario ya había tocado /
-         * deslizado mientras Spotify cargaba,
-         * esa intención ya quedó registrada.
-         *
-         * Volvemos a intentar ahora que
-         * Spotify realmente está preparado.
-         */
-
-        if (userHasInteracted) {
-
-          tryToPlay();
+          tryAutoPlay();
 
         }
 
@@ -1233,7 +1223,7 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
 
 
     /* =============================
-       REALMENTE EMPEZÓ A SONAR
+       REALMENTE COMENZÓ
     ============================== */
 
     spotifyController.addListener(
@@ -1247,7 +1237,7 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
 
 
     /* =============================
-       ESTADO REAL DEL PLAYER
+       CAMBIOS DEL PLAYER
     ============================== */
 
     spotifyController.addListener(
@@ -1262,10 +1252,8 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
 
 
         /*
-         * NO usamos un simple estado inicial
-         * pausado para cancelar el autostart.
+         * Está reproduciendo realmente.
          */
-
         if (data.isPaused === false) {
 
           showPlaying();
@@ -1276,10 +1264,9 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
 
 
         /*
-         * Solamente consideramos una pausa
-         * real si previamente estaba sonando.
+         * Solamente mostramos PAUSADO
+         * si antes efectivamente estaba sonando.
          */
-
         if (
           spotifyPlaying &&
           data.isPaused === true
@@ -1312,43 +1299,36 @@ enterButton.addEventListener(
   "click",
   (event) => {
 
-    /*
-     * Que el listener global no haga
-     * una segunda acción con este click.
-     */
     event.stopPropagation();
 
 
-    if (!spotifyController || !spotifyReady) {
+    if (!spotifyController) {
       return;
     }
 
 
-    if (spotifyPlaying) {
+    /*
+     * El botón sí controla directamente
+     * play / pause.
+     */
 
-      /*
-       * El usuario explícitamente
-       * pidió pausa.
-       */
+    if (spotifyPlaying) {
 
       spotifyController.pause();
 
     } else {
 
-      /*
-       * Una pausa manual se puede
-       * reanudar siempre desde el botón.
-       */
-
       try {
 
-        spotifyController.play();
+        /*
+         * resume() también inicia si todavía
+         * no había comenzado.
+         */
+        spotifyController.resume();
 
       } catch (error) {
 
-        console.log(
-          "No se pudo reanudar Spotify."
-        );
+        spotifyController.play();
 
       }
 
@@ -1370,7 +1350,6 @@ enterButton.addEventListener(
 
   }
 );
-
   
     
   </script>
